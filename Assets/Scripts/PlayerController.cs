@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier;
     public float lowJumpMultiplier;
 
+    public Boolean isJumping = false;
+
     private Rigidbody2D rigidBody;
 
     private Keyboard keyboard;
@@ -34,11 +36,11 @@ public class PlayerController : MonoBehaviour
             float moveHorizontal = 0.0f;
             if (keyboard.dKey.isPressed)
             {
-                moveHorizontal += (1.0f * speed);
+                moveHorizontal += speed;
             }
             if (keyboard.aKey.isPressed)
             {
-                moveHorizontal -= (1.0f * speed);
+                moveHorizontal -= speed;
             }
 
             rigidBody.velocity = new Vector2(moveHorizontal, rigidBody.velocity.y);
@@ -47,18 +49,19 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (keyboard != null && keyboard.spaceKey.isPressed)
+        if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame && !isJumping)
         {
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+            isJumping = true;
         }
 
-        if (rigidBody.velocity.y < 0)
+        if (rigidBody.velocity.y <= 0)
         {
-            rigidBody.velocity += Vector2.up * (-5.0f) * (fallMultiplier - 1) * Time.deltaTime;
+            rigidBody.velocity += Vector2.down * fallMultiplier * Time.deltaTime;
         }
-        else if (rigidBody.velocity.y >= 0 && !keyboard.spaceKey.isPressed)
+        else if (rigidBody.velocity.y > 0 && !keyboard.spaceKey.wasPressedThisFrame)
         {
-            rigidBody.velocity += Vector2.up * (-5.0f) * (lowJumpMultiplier - 1) * Time.deltaTime;
+            rigidBody.velocity += Vector2.down * lowJumpMultiplier * Time.deltaTime;
         }
     }
 }
