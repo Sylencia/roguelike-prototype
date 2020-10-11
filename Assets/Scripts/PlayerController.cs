@@ -11,57 +11,110 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier;
     public float lowJumpMultiplier;
 
-    public Boolean isJumping = false;
-
     private Rigidbody2D rigidBody;
+
+    private bool facingRight = true;
+
+    private bool isGrounded;
+    public Transform groundCheck;
+    public float checkRadius;
+    public LayerMask whatIsGround;
+
+    private int extraJumps;
+    public int extraJumpsValue;
 
     private Keyboard keyboard;
 
     void Start()
     {
+        extraJumps = extraJumpsValue;
         rigidBody = GetComponent<Rigidbody2D>();
         keyboard = Keyboard.current;
     }
 
+    void FixedUpdate()
+    {
+        CheckGround();
+
+        Move();
+        Fall();
+    }
+
     void Update()
     {
-        Move();
         Jump();
+    }
+
+    private void CheckGround()
+    {
+        Vector2 position = groundCheck.position;
+        float radius = checkRadius;
+        LayerMask ground = whatIsGround;
+        isGrounded = Physics2D.OverlapCircle(position, radius, ground);
     }
 
     private void Move()
     {
-        if (keyboard != null)
+        if(keyboard != null)
         {
             float moveHorizontal = 0.0f;
-            if (keyboard.dKey.isPressed)
+            if(keyboard.dKey.isPressed)
             {
                 moveHorizontal += speed;
             }
-            if (keyboard.aKey.isPressed)
+            if(keyboard.aKey.isPressed)
             {
                 moveHorizontal -= speed;
             }
 
             rigidBody.velocity = new Vector2(moveHorizontal, rigidBody.velocity.y);
+
+            if(facingRight == false && moveHorizontal > 0.0f)
+            {
+                Flip();
+            }
+            else if(facingRight == true && moveHorizontal < 0.0f)
+            {
+                Flip();
+            }
         }
     }
 
     private void Jump()
     {
-        if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame && !isJumping)
+        if(isGrounded == true)
         {
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
-            isJumping = true;
+            extraJumps = extraJumpsValue;
         }
 
-        if (rigidBody.velocity.y <= 0)
+        if(keyboard != null && keyboard.spaceKey.wasPressedThisFrame && extraJumps > 0)
         {
-            rigidBody.velocity += Vector2.down * fallMultiplier * Time.deltaTime;
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+            extraJumps--;
         }
-        else if (rigidBody.velocity.y > 0 && !keyboard.spaceKey.wasPressedThisFrame)
+        else if(keyboard != null && keyboard.spaceKey.wasPressedThisFrame && extraJumps == 0 && isGrounded == true)
         {
-            rigidBody.velocity += Vector2.down * lowJumpMultiplier * Time.deltaTime;
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
         }
+    }
+
+    private void Fall()
+    {
+        if(rigidBody.velocity.y < 0)
+        {
+            rigidBody.velocity += Vector2.down * -Physics2D.gravity * fallMultiplier * Time.deltaTime;
+        }
+        else if(rigidBody.velocity.y > 0 && !keyboard.spaceKey.wasPressedThisFrame)
+        {
+            rigidBody.velocity += Vector2.down * -Physics2D.gravity * lowJumpMultiplier * Time.deltaTime;
+        }
+    }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 scaler = transform.localScale;
+        scaler.x *= -1;
+        transform.localScale = scaler;
     }
 }
