@@ -34,8 +34,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        CheckGround();
-
+        CheckIfGrounded();
         Move();
         Fall();
     }
@@ -45,12 +44,14 @@ public class PlayerController : MonoBehaviour
         Jump();
     }
 
-    private void CheckGround()
+    private void CheckIfGrounded()
     {
-        Vector2 position = groundCheck.position;
-        float radius = checkRadius;
-        LayerMask ground = whatIsGround;
-        isGrounded = Physics2D.OverlapCircle(position, radius, ground);
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround) != null;
+
+        if(isGrounded)
+        {
+            extraJumps = extraJumpsValue;
+        }
     }
 
     private void Move()
@@ -69,11 +70,11 @@ public class PlayerController : MonoBehaviour
 
             rigidBody.velocity = new Vector2(moveHorizontal, rigidBody.velocity.y);
 
-            if(facingRight == false && moveHorizontal > 0.0f)
+            if(!facingRight && moveHorizontal > 0.0f)
             {
                 Flip();
             }
-            else if(facingRight == true && moveHorizontal < 0.0f)
+            else if(facingRight && moveHorizontal < 0.0f)
             {
                 Flip();
             }
@@ -82,17 +83,12 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if(isGrounded == true)
-        {
-            extraJumps = extraJumpsValue;
-        }
-
         if(keyboard != null && keyboard.spaceKey.wasPressedThisFrame && extraJumps > 0)
         {
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
             extraJumps--;
         }
-        else if(keyboard != null && keyboard.spaceKey.wasPressedThisFrame && extraJumps == 0 && isGrounded == true)
+        else if(keyboard != null && keyboard.spaceKey.wasPressedThisFrame && extraJumps == 0 && isGrounded)
         {
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
         }
