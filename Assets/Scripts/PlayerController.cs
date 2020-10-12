@@ -23,13 +23,12 @@ public class PlayerController : MonoBehaviour
     private int extraJumps;
     public int extraJumpsValue;
 
-    private Keyboard keyboard;
+    private Vector2 movementVector = Vector2.zero;
 
     void Start()
     {
         extraJumps = extraJumpsValue;
         rigidBody = GetComponent<Rigidbody2D>();
-        keyboard = Keyboard.current;
     }
 
     void FixedUpdate()
@@ -39,9 +38,28 @@ public class PlayerController : MonoBehaviour
         Fall();
     }
 
-    void Update()
+    public void MovementCallback(InputAction.CallbackContext context)
     {
-        Jump();
+        if(context.started || context.canceled)
+        {
+            movementVector = context.ReadValue<Vector2>();
+        }
+    }
+
+    public void JumpCallback(InputAction.CallbackContext context)
+    {
+        if(context.started)
+        {
+            if(extraJumps > 0)
+            {
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+                extraJumps--;
+            }
+            else if(extraJumps == 0 && isGrounded)
+            {
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+            }
+        }
     }
 
     private void CheckIfGrounded()
@@ -56,41 +74,15 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        if(keyboard != null)
+        rigidBody.velocity = new Vector2(movementVector.x * speed, rigidBody.velocity.y);
+
+        if(!facingRight && movementVector.x > 0.0f)
         {
-            float moveHorizontal = 0.0f;
-            if(keyboard.dKey.isPressed)
-            {
-                moveHorizontal += speed;
-            }
-            if(keyboard.aKey.isPressed)
-            {
-                moveHorizontal -= speed;
-            }
-
-            rigidBody.velocity = new Vector2(moveHorizontal, rigidBody.velocity.y);
-
-            if(!facingRight && moveHorizontal > 0.0f)
-            {
-                Flip();
-            }
-            else if(facingRight && moveHorizontal < 0.0f)
-            {
-                Flip();
-            }
+            Flip();
         }
-    }
-
-    private void Jump()
-    {
-        if(keyboard != null && keyboard.spaceKey.wasPressedThisFrame && extraJumps > 0)
+        else if(facingRight && movementVector.x < 0.0f)
         {
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
-            extraJumps--;
-        }
-        else if(keyboard != null && keyboard.spaceKey.wasPressedThisFrame && extraJumps == 0 && isGrounded)
-        {
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+            Flip();
         }
     }
 
@@ -100,7 +92,7 @@ public class PlayerController : MonoBehaviour
         {
             rigidBody.velocity += Vector2.down * -Physics2D.gravity * fallMultiplier * Time.deltaTime;
         }
-        else if(rigidBody.velocity.y > 0 && !keyboard.spaceKey.wasPressedThisFrame)
+        else if(rigidBody.velocity.y > 0)
         {
             rigidBody.velocity += Vector2.down * -Physics2D.gravity * lowJumpMultiplier * Time.deltaTime;
         }
