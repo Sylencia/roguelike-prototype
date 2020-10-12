@@ -23,15 +23,15 @@ public class PlayerController : MonoBehaviour
     private int extraJumps;
     public int extraJumpsValue;
 
-    private Vector2 movementVector = Vector2.zero;
+    private Vector2 inputVector = Vector2.zero;
 
-    void Start()
+    private void Start()
     {
         extraJumps = extraJumpsValue;
         rigidBody = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         CheckIfGrounded();
         Move();
@@ -40,10 +40,7 @@ public class PlayerController : MonoBehaviour
 
     public void MovementCallback(InputAction.CallbackContext context)
     {
-        if(context.started || context.canceled)
-        {
-            movementVector = context.ReadValue<Vector2>();
-        }
+        inputVector = context.ReadValue<Vector2>();
     }
 
     public void JumpCallback(InputAction.CallbackContext context)
@@ -74,13 +71,13 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        rigidBody.velocity = new Vector2(movementVector.x * speed, rigidBody.velocity.y);
+        rigidBody.velocity = new Vector2(inputVector.x * speed, rigidBody.velocity.y);
 
-        if(!facingRight && movementVector.x > 0.0f)
+        if(!facingRight && inputVector.x > 0.0f)
         {
             Flip();
         }
-        else if(facingRight && movementVector.x < 0.0f)
+        else if(facingRight && inputVector.x < 0.0f)
         {
             Flip();
         }
