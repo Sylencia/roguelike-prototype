@@ -20,6 +20,12 @@ public class PlayerController : MonoBehaviour
     public float checkRadius;
     public LayerMask whatIsGround;
 
+    private bool hasBeenHit;
+    private Vector2 damageDirection;
+    public float xKnockBackForce;
+    public float yKnockBackForce;
+    public float knockBackTime;
+
     private int extraJumps;
     public int extraJumpsValue;
 
@@ -59,6 +65,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnHitCallback(Vector2 direction)
+    {
+        hasBeenHit = true;
+        damageDirection = direction;
+        Invoke("OnHitEndCallback", knockBackTime);
+    }
+
     private void CheckIfGrounded()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround) != null;
@@ -81,6 +94,11 @@ public class PlayerController : MonoBehaviour
         {
             Flip();
         }
+
+        if (hasBeenHit)
+        {
+            rigidBody.velocity = new Vector2(xKnockBackForce * -damageDirection.x, yKnockBackForce * -damageDirection.y);
+        }
     }
 
     private void Fall()
@@ -101,5 +119,10 @@ public class PlayerController : MonoBehaviour
         Vector3 scaler = transform.localScale;
         scaler.x *= -1;
         transform.localScale = scaler;
+    }
+
+    private void OnHitEndCallback()
+    {
+        hasBeenHit = false;
     }
 }

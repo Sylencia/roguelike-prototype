@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag == "Obstacle") {
             health -= 1;
+            Vector2 direction = (collision.transform.position - transform.position).normalized;
+            GetComponent<PlayerController>().OnHitCallback(new Vector2(direction.x, direction.y));
         }
     }
 
