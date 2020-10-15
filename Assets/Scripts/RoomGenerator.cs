@@ -30,7 +30,7 @@ public class RoomGenerator : MonoBehaviour
     public int numRooms;
 
     private List<Room> roomData = new List<Room>();
-    public List<(int, int)> emptyRoomCoords = new List<(int, int)>();
+    public List<(int x, int y)> emptyRoomCoords = new List<(int, int)>();
 
     private void Start()
     {
@@ -96,7 +96,7 @@ public class RoomGenerator : MonoBehaviour
         adjacentCoordinates.Add((coordinates.x - 1, coordinates.y));
 
         foreach((int x, int y) coord in adjacentCoordinates) {
-            if(!GetIfRoomExists(coord)) {
+            if(!GetIfRoomExists(coord) && !emptyRoomCoords.Exists(room => room.x == coord.x && room.y == coord.y)) {
                 emptyRoomCoords.Add(coord);
             }
         }

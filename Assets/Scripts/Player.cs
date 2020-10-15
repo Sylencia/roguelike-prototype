@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public int health;
+    public int maxHealth;
+    public Vector2 spawnPosition;
+    private int health;
     public GameObject deathEffect;
+    public GameObject damageEffect;
+
+    private void Start()
+    {
+        health = maxHealth;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -13,14 +21,22 @@ public class Player : MonoBehaviour
             health -= 1;
             Vector2 direction = (collision.transform.position - transform.position).normalized;
             GetComponent<PlayerController>().OnHitCallback(new Vector2(direction.x, direction.y));
+            Instantiate(damageEffect, transform.position, Quaternion.identity);
         }
+    }
+
+    private void Reset()
+    {
+        health = maxHealth;
+        transform.position = spawnPosition;
     }
 
     private void Update()
     {
-        if(health == 0) {
+        if(health <= 0) {
             Instantiate(deathEffect, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            Reset();
         }
     }
 }
