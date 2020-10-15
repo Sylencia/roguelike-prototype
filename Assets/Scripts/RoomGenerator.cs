@@ -41,7 +41,7 @@ public class RoomGenerator : MonoBehaviour
     {
         roomData = new List<Room>();
         emptyRoomCoords = new List<(int, int)>();
-        foreach(var tile in GameObject.FindGameObjectsWithTag("Rooms")) {
+        foreach(var tile in GameObject.FindGameObjectsWithTag("Border")) {
             Destroy(tile);
         }
     }

@@ -12,7 +12,8 @@ public class SpawnObject : MonoBehaviour
     {
         var idx = Random.Range(0, objectPool.Length);
         var rotation = allowRandomRotation ? Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 4) * 90f)) : Quaternion.identity;
-        Instantiate(objectPool[idx], transform.position, rotation);
+        var instance = Instantiate(objectPool[idx], transform.position, rotation);
+        instance.transform.parent = gameObject.transform.parent;
         Destroy(gameObject);
     }
 }
