@@ -30,7 +30,11 @@ public class RoomGenerator3 : MonoBehaviour
     private Queue<(int x, int y)> roomCreationQueue = new Queue<(int, int)>();
     private List<RoomData> roomDataList = new List<RoomData>();
 
-    private float spawnPercentChance = 50;
+    [Range(1, 100)]
+    public int roomBranchingChance = 50;
+    [Range(2, 25)]
+    public int minimumRooms = 10;
+
     private int roomsSpawned = 0;
 
     private void Start()
@@ -51,7 +55,7 @@ public class RoomGenerator3 : MonoBehaviour
             roomsSpawned++;
         }
 
-        if(roomsSpawned < 10) {
+        if(roomsSpawned < minimumRooms) {
             GenerateRooms();
         }
     }
@@ -80,7 +84,7 @@ public class RoomGenerator3 : MonoBehaviour
         (int, int) rightCoord = (roomCoords.x + 1, roomCoords.y);
         (int, int) topCoord = (roomCoords.x, roomCoords.y + 1);
         // Check Left
-        bool createLeft = !GetIfRoomExists(leftCoord) && Random.Range(0, 100) >= spawnPercentChance;
+        bool createLeft = !GetIfRoomExists(leftCoord) && Random.Range(0, 100) < roomBranchingChance;
         bool requiresLeft = GetIfRoomExists(leftCoord) && GetIfOpeningNeeded(leftCoord, OPENING_DIRECTION.LEFT);
         if (createLeft || requiresLeft) {
             idx += 1;
@@ -90,7 +94,7 @@ public class RoomGenerator3 : MonoBehaviour
         }
         
         // Check Bottom
-        bool createBottom = !GetIfRoomExists(bottomCoord) && Random.Range(0, 100) >= spawnPercentChance;
+        bool createBottom = !GetIfRoomExists(bottomCoord) && Random.Range(0, 100) < roomBranchingChance;
         bool requiresBottom = GetIfRoomExists(bottomCoord) && GetIfOpeningNeeded(bottomCoord, OPENING_DIRECTION.BOTTOM);
         if (createBottom || requiresBottom) {
             idx += 2;
@@ -100,7 +104,7 @@ public class RoomGenerator3 : MonoBehaviour
         }
         
         // Check Right
-        bool createRight = !GetIfRoomExists(rightCoord) && Random.Range(0, 100) >= spawnPercentChance;
+        bool createRight = !GetIfRoomExists(rightCoord) && Random.Range(0, 100) < roomBranchingChance;
         bool requiresRight = GetIfRoomExists(rightCoord) && GetIfOpeningNeeded(rightCoord, OPENING_DIRECTION.RIGHT);
         if (createRight || requiresRight) {
             idx += 4;
@@ -110,7 +114,7 @@ public class RoomGenerator3 : MonoBehaviour
         }
         
         // Check Top
-        bool createTop = !GetIfRoomExists(topCoord) && Random.Range(0, 100) >= spawnPercentChance;
+        bool createTop = !GetIfRoomExists(topCoord) && Random.Range(0, 100) < roomBranchingChance;
         bool requiresTop = GetIfRoomExists(topCoord) && GetIfOpeningNeeded(topCoord, OPENING_DIRECTION.TOP);
         if (createTop || requiresTop) {
             idx += 8;
