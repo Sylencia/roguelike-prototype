@@ -8,4 +8,7 @@ public class RoomInfo : MonoBehaviour
     public bool leftOpen;
     public bool bottomOpen;
     public bool rightOpen;
+
+    public bool isStartRoom = false;
+    public bool isFinishRoom = false;
 }

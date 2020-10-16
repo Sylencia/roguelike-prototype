@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
-  jumpForce: 13
+  jumpForce: 15
   fallMultiplier: 7
   lowJumpMultiplier: 5
   groundCheck: {fileID: 166189385}

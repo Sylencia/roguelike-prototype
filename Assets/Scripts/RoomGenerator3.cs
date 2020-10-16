@@ -7,11 +7,15 @@ public class RoomData
 {
     public (int x, int y) coordinates;
     public GameObject roomObject;
+    public bool isStartRoom;
+    public bool isFinishRoom;
 
-    public RoomData((int, int) c, GameObject go)
+    public RoomData((int, int) c, GameObject go, bool start, bool finish)
     {
         coordinates = c;
         roomObject = go;
+        isStartRoom = start;
+        isFinishRoom = finish;
     }
 }
 public enum OPENING_DIRECTION
@@ -64,10 +68,18 @@ public class RoomGenerator3 : MonoBehaviour
     {
         for (int cx = -2; cx <= 2; ++cx) {
             for (int cy = -2; cy <= 2; ++cy) {
-                Vector2 convertedCoords = new Vector2(cx * 13, cy * 13);
+                Vector2 convertedCoords = new Vector2(cx * 12, cy * 12);
                 if (GetIfRoomExists((cx, cy))) {
                     RoomData roomData = roomDataList.Find(room => room.coordinates == (cx, cy));
                     GameObject instance = Instantiate(roomData.roomObject, convertedCoords, Quaternion.identity);
+                    instance.GetComponent<RoomInfo>().isStartRoom = roomData.isStartRoom;
+                    instance.GetComponent<RoomInfo>().isFinishRoom = roomData.isFinishRoom;
+
+                    if(roomData.isStartRoom) {
+                        instance.GetComponentInChildren<PlayerSpawner>().SpawnPlayer();
+                    } else {
+                        instance.GetComponentInChildren<PlayerSpawner>().RemoveSpawner();
+                    }
                 } else {
                     GameObject instance = Instantiate(filledRoom, convertedCoords, Quaternion.identity);
                 }
@@ -126,7 +138,7 @@ public class RoomGenerator3 : MonoBehaviour
         if (idx == 0 && !requiresLeft && !requiresRight && !requiresBottom && !requiresTop) {
             CreateRoom(roomCoords);
         } else if (idx > 0) {
-            roomDataList.Add(new RoomData(roomCoords, rooms[idx-1]));
+            roomDataList.Add(new RoomData(roomCoords, rooms[idx - 1], roomsSpawned == 0, roomCreationQueue.Count == 0));
         }
     }
 
