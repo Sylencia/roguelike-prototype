@@ -25,6 +25,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Obstacle")
+        {
+            health -= 1;
+            Instantiate(damageEffect, transform.position, Quaternion.identity);
+        }
+    }
+
     private void Reset()
     {
         health = maxHealth;
