@@ -8,7 +8,7 @@ public class RoomData
     public (int x, int y) coordinates;
     public GameObject roomObject;
     public bool isStartRoom;
-    public bool isFinishRoom;
+    public bool isFinishRoom;    
 
     public RoomData((int, int) c, GameObject go, bool start, bool finish)
     {
@@ -30,6 +30,7 @@ public class RoomGenerator3 : MonoBehaviour
 {
     public GameObject[] rooms;
     public GameObject filledRoom;
+    public int roomSize;
 
     private Queue<(int x, int y)> roomCreationQueue = new Queue<(int, int)>();
     private List<RoomData> roomDataList = new List<RoomData>();
@@ -68,7 +69,7 @@ public class RoomGenerator3 : MonoBehaviour
     {
         for (int cx = -2; cx <= 2; ++cx) {
             for (int cy = -2; cy <= 2; ++cy) {
-                Vector2 convertedCoords = new Vector2(cx * 12, cy * 12);
+                Vector2 convertedCoords = new Vector2(cx * roomSize, cy * roomSize);
                 if (GetIfRoomExists((cx, cy))) {
                     RoomData roomData = roomDataList.Find(room => room.coordinates == (cx, cy));
                     GameObject instance = Instantiate(roomData.roomObject, convertedCoords, Quaternion.identity);

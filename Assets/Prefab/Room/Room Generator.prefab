@@ -60,5 +60,6 @@ MonoBehaviour:
   - {fileID: 3047050714458665277, guid: e22c0f6dfcc40ab4da8eb7af508ddbbd, type: 3}
   - {fileID: 3047050714458665277, guid: 7581ce9042b57c243bd64fe0f02bb8f1, type: 3}
   filledRoom: {fileID: 3047050714458665277, guid: 2e2bcaf3ffccd3d43857f2ed403e33ae, type: 3}
+  roomSize: 12
   roomBranchingChance: 35
   minimumRooms: 10

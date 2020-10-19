@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     public GameObject deathEffect;
     public GameObject damageEffect;
 
+    private List<ContactPoint2D> contacts = new List<ContactPoint2D>();
+
     private void Start()
     {
         health = maxHealth;
@@ -21,7 +23,7 @@ public class Player : MonoBehaviour
             health -= 1;
             Vector2 direction = (collision.transform.position - transform.position).normalized;
             GetComponent<PlayerController>().OnHitCallback(new Vector2(direction.x, direction.y));
-            Instantiate(damageEffect, transform.position, Quaternion.identity);
+            Instantiate(damageEffect, collision.GetContact(0).point, Quaternion.identity);
         }
     }
 
@@ -30,7 +32,11 @@ public class Player : MonoBehaviour
         if(collision.gameObject.tag == "Obstacle")
         {
             health -= 1;
-            Instantiate(damageEffect, transform.position, Quaternion.identity);
+            collision.GetContacts(contacts);
+            foreach (ContactPoint2D contact in contacts) {
+                Debug.Log(contact.point.ToString());
+                Instantiate(damageEffect, contact.point, Quaternion.identity);
+            }
         }
     }
 

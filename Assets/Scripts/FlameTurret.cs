@@ -7,6 +7,7 @@ public class FlameTurret : MonoBehaviour
     public ParticleSystem flameEmitter;
     public float flameOnTime;
     public float flameOffTime;
+    public float delayTime;
 
     private BoxCollider2D boxCollider;
 
@@ -14,6 +15,12 @@ public class FlameTurret : MonoBehaviour
     void Start()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+        StartCoroutine(DelayStart());
+    }
+
+    private IEnumerator DelayStart()
+    {
+        yield return new WaitForSeconds(delayTime);
         StartCoroutine(ControlFlames());
     }
 
