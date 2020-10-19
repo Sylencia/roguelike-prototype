@@ -12,7 +12,7 @@ GameObject:
   m_Layer: 0
   m_Name: Ground Check
   m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 1937631642649643731}
   - component: {fileID: 1337334943}
   - component: {fileID: 2591224342330903663}
+  - component: {fileID: 5533692979412822600}
   - component: {fileID: 1337334940}
   - component: {fileID: 1189321040}
   - component: {fileID: 6165055673516643569}
@@ -136,6 +137,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 0.81}
   m_EdgeRadius: 0
+--- !u!58 &5533692979412822600
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289138272970128405}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.04, y: -0.27}
+  serializedVersion: 2
+  m_Radius: 0.15
 --- !u!114 &1337334940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,10 +165,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab753f4a56aea144ca85f8255bd3f9b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
-  jumpForce: 15
-  fallMultiplier: 7
-  lowJumpMultiplier: 5
+  speed: 6
+  jumpForce: 13
+  fallMultiplier: 6
+  lowJumpMultiplier: 4
   groundCheck: {fileID: 166189385}
   checkRadius: 0.1
   whatIsGround:
