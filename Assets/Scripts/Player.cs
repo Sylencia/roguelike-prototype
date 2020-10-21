@@ -32,11 +32,9 @@ public class Player : MonoBehaviour
         if(collision.gameObject.tag == "Obstacle")
         {
             health -= 1;
-            collision.GetContacts(contacts);
-            foreach (ContactPoint2D contact in contacts) {
-                Debug.Log(contact.point.ToString());
-                Instantiate(damageEffect, contact.point, Quaternion.identity);
-            }
+            Vector2 direction = (collision.transform.position - transform.position).normalized;
+            Vector2 position = new Vector2(direction.x + transform.position.x, direction.y + transform.position.y);
+            Instantiate(damageEffect, position, Quaternion.identity);
         }
     }
 
